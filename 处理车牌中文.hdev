@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="24.11.1.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>dev_clear_window()</l>
+<l>read_image(image,'D:/图片处理/77946ab3984044b58749f53059d6e5fb.jpg')</l>
+<l>dev_open_window (0, 0, 512, 512, 'black', WindowHandle)</l>
+<c>****在窗口显示图片</c>
+<l>dev_display(image)</l>
+<c>****图片黑白化</c>
+<l>rgb1_to_gray(image, GrayImage)</l>
+<c>***图片二值化选出要的部分</c>
+<l>threshold (GrayImage, Regions, 90, 164)</l>
+<c>***加颜色区分板块</c>
+<l>connection(Regions, ConnectedRegions)</l>
+<c>***选出面积合适的图片</c>
+<l>select_shape (ConnectedRegions, SelectedRegions, 'area', 'and', 80190,90000)</l>
+<c></c>
+<c></c>
+<c></c>
+<c>***转正图片</c>
+<c>***获取方向矩阵 </c>
+<l>shape_trans(SelectedRegions, RegionTrans, 'rectangle2')</l>
+<c>***获取中心坐标</c>
+<l>area_center(RegionTrans, Area, Row, Column)</l>
+<c>***获取弧度</c>
+<l>orientation_region(RegionTrans, Phi)</l>
+<c>***矩阵转换</c>
+<l>vector_angle_to_rigid(Row, Column, Phi, Row, Column,0, HomMat2D)</l>
+<c>***呈现出图片</c>
+<l>affine_trans_region(RegionTrans, RegionAffineTrans, HomMat2D, 'nearest_neighbor')</l>
+<c>***转正图片</c>
+<l>affine_trans_image(image, ImageAffineTrans, HomMat2D, 'constant', 'false')</l>
+<c>***获取选中的图片</c>
+<l>reduce_domain(ImageAffineTrans, RegionAffineTrans, ImageReduced)</l>
+<c></c>
+<c>****图片黑白化</c>
+<l>rgb1_to_gray(ImageReduced, GrayImage1)</l>
+<c>***图片二值化选出要的部分</c>
+<l>threshold (GrayImage1, Regions1, 197, 255)</l>
+<c></c>
+<c>***去掉多余的数据</c>
+<c>***closing_circle(Regions1, RegionClosing, 3.5)</c>
+<l>opening_circle(Regions1, RegionOpening,2.5)</l>
+<c>***图像颜色板块区分</c>
+<l>connection(RegionOpening, ConnectedRegions1)</l>
+<c>***选出想要的部分</c>
+<l>select_shape(ConnectedRegions1, SelectedRegions1, 'area', 'and',130,6000)</l>
+<c>***图片文字排序</c>
+<l>sort_region(SelectedRegions1, SortedRegions, 'character', 'true', 'column')</l>
+<c>***选择区域</c>
+<l>count_obj(SortedRegions, Number)</l>
+<c></c>
+<l>for Index := 0 to Number+1 by 1</l>
+<l>    select_obj(SortedRegions, ObjectSelected, Index)</l>
+<c>    </c>
+<l>endfor</l>
+<c></c>
+<l>select_obj(SortedRegions, ObjectSelected, 1)</l>
+<l>select_obj(SortedRegions, ObjectSelected1, 2)</l>
+<l>select_obj(SortedRegions, ObjectSelected2, 3)</l>
+<l>select_obj(SortedRegions, ObjectSelected3, 4)</l>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
